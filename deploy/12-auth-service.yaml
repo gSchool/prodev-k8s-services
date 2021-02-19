@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth
+  namespace: prodev-k8s-start
+  labels:
+    role: auth
+spec:
+  ports:
+   - protocol: TCP
+     port: 80
+  selector:
+    role: auth

@@ -1,0 +1,32 @@
+button[disabled],
+button[disabled]:hover,
+button.button-primary[disabled],
+button.button-primary[disabled]:hover {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
+.error {
+  background-color: #861f41;
+  color: white;
+  padding: 1rem;
+}
+
+.right-align {
+  text-align: right;
+}
+
+.status-report {
+  margin-bottom: 3rem;
+}
+
+.success {
+  background-color: #00b398;
+  color: white;
+  padding: 1rem;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+}

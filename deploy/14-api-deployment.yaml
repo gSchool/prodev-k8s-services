@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: prodev-k8s-start
+  labels:
+    role: api
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      role: api
+  template:
+    metadata:
+      labels:
+        role: api
+    spec:
+      containers:
+      - name: api
+        image: orchestrated-api:latest
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: PGHOST
+            value: postgres
+          - name: PGUSER
+            value: postgres
+          - name: PGDATABASE
+            value: postgres
+          - name: PGPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-password
+                key: password
+          - name: PORT
+            value: "80"
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /ok
+            port: 80
+          initialDelaySeconds: 2
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+             path: /ok
+             port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+  namespace: prodev-k8s-start
+  labels:
+    role: api
+spec:
+  ports:
+   - protocol: TCP
+     port: 80
+  selector:
+    role: api

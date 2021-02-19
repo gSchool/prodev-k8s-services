@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth
+  namespace: prodev-k8s-start
+  labels:
+    role: auth
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      role: auth
+  template:
+    metadata:
+      labels:
+        role: auth
+    spec:
+      containers:
+      - name: auth
+        image: orchestrated-auth:latest
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: MONGODB_URL
+            value: mongodb://mongo:27017/auth
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: jwt-secret
+                key: secret
+          - name: PORT
+            value: "80"
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /ok
+            port: 80
+          initialDelaySeconds: 2
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+             path: /ok
+             port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
